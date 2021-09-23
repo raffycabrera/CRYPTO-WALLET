@@ -13,32 +13,191 @@ require_once "config.php";
 
 $buyValue;
 
-// Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $buyValue =$_POST["buyValue"];
-    // Check input errors before updating the database
-       // Prepare an update statement
-        $sql = "UPDATE users SET BITCOIN = ? WHERE id = ?";
-        
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_bitcoin, $param_id);
-            
-            // Set parameters
-            $param_bitcoin = $BITCOIN;
-            $param_id = $_SESSION["id"];
-            
+	
+	
+if($_POST["code"]=="BTC"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET BITCOIN = BITCOIN - ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+               
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="ETH"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET ETHEREUM = ETHEREUM - ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+                
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+	
+else if($_POST["code"]=="BNB"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET BINANCE = BINANCE - ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+             
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="ADA"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET CARDANO = CARDAN)-? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+              
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="USDT"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET TETHER = TETHER- ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
+                
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}
+		
+else if($_POST["code"]=="XRP"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET XRP = XRP- ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
 
-            // Close statement
-            mysqli_stmt_close($stmt);
-        }
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}		
+else if($_POST["code"]=="DOGE"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET DOGECOIN = DOGECOIN- ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
+              
+                header("location: wallet.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}		
+			
 
-    
-    // Close connection
-    mysqli_close($link);
-}
-
-
+	}
+	
 
 ?>
 
@@ -176,7 +335,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
     <label for="buyValue"><b>ENTER USD VALUE TO SELL</b></label>
     <input type="int" placeholder="USD VALUE" name="buyValue" required>
-
+	
+	<label for="code"><b>CONFIRM CRYPTO CODE: </b></label>
+    <input type="text" placeholder="CODE e.g BTC" name="code" required>
 
     <button type="submit" class="btn" >Sell</button>
 	

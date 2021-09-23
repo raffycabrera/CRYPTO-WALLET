@@ -1,14 +1,203 @@
 <?php
 // Initialize the session
 session_start();
- $_SESSION["SELECTED"]=0;
+$select = "";
+
+ 
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
+require_once "config.php";
 
 
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+	
+	
+if($_POST["code"]=="BTC"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET BITCOIN = BITCOIN + ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="ETH"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET ETHEREUM = ETHEREUM + ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+	
+else if($_POST["code"]=="BNB"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET BINANCE = BINANCE + ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="ADA"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET CARDANO = CARDANO+ ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  
+		
+		
+	}
+	
+else if($_POST["code"]=="USDT"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET TETHER = TETHER+ ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}
+		
+else if($_POST["code"]=="XRP"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET XRP = XRP+ ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}		
+else if($_POST["code"]=="DOGE"){
+		$buyValue = $_POST["buyValue"];
+	
+	
+	$sql = "UPDATE users SET DOGECOIN = DOGECOIN+ ? WHERE id = ?";
+	if($stmt = mysqli_prepare($link, $sql)){
+	
+	mysqli_stmt_bind_param($stmt, "si", $param_bitcoin, $param_id);
+	$param_id = $_SESSION["id"];
+	$param_bitcoin = $buyValue;
+	
+	}
+	
+	
+if(mysqli_stmt_execute($stmt)){
+                // Password updated successfully. Destroy the session, and redirect to login page
+                header("location: welcome.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+ mysqli_stmt_close($stmt);
+		  	
+	}		
+			
+
+	}
+	
+	
 
 ?>
 
@@ -140,8 +329,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 <!-- popup menu -->
 <div class="form-popup" id="myForm">
-  <form action="" class="form-container" method ="post">
+  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="form-container" method ="post">
      <h2 id="demo"></h2>
+	 
+	
+	 
 
     <label for="buyValue"><b>ENTER USD VALUE </b></label>
     <input type="int" placeholder="USD VALUE" name="buyValue" required>
@@ -151,6 +343,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 	
 	<label for="CVV"><b>CVV</b></label>
     <input type="text" placeholder="Enter Number" name="ccv" required>
+	 <label for="buyValue"><b>CONFIRM CRYPTO CODE: </b></label>
+    <input type="text" placeholder="CODE e.g BTC" name="code" required>
 
 
     <button type="submit" class="btn" >Buy</button>
@@ -176,10 +370,10 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <div class="w3-container w3-red w3-padding-16">
         <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>52</h3>
+          <h3>3</h3>
         </div>
         <div class="w3-clear"></div>
-        <h4>Messages</h4>
+        <h4>NEWS</h4>
       </div>
     </div>
     <div class="w3-quarter">
@@ -194,19 +388,19 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
+        <div class="w3-left"><i class="fa fa-map-o w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>23</h3>
+          <h3>30</h3>
         </div>
         <div class="w3-clear"></div>
-        <h4>Shares</h4>
+        <h4>Active Countries</h4>
       </div>
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-orange w3-text-white w3-padding-16">
         <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>50</h3>
+          <h3>40</h3>
         </div>
         <div class="w3-clear"></div>
         <h4>Users</h4>
@@ -394,12 +588,10 @@ function off() {
 
 function bitCoinFunc() {
   document.getElementById("demo").innerHTML = "BUY BitCoin";
-
 }
 
 function ethFunc() {
   document.getElementById("demo").innerHTML = "BUY Ethereum";
- 
 }
 
 function binFunc() {
