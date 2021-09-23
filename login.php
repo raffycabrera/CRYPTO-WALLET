@@ -15,7 +15,15 @@ require_once "config.php";
 $username = $password = "";
 $username_err = $password_err = $login_err = "";
 $wallet ="";
- 
+$bitcoin ="";
+$ethereum = "";
+$binance = "";
+$cardano = "";
+$tether = "";
+$xrp = "";
+$doge= "";
+$USD ="";
+
  
  
 // Processing form data when form is submitted
@@ -41,7 +49,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password, wallet FROM users WHERE username = ?";
+        $sql = "SELECT id, username, password, wallet,USD,BITCOIN,ETHEREUM,BINANCE,CARDANO,TETHER,XRP,DOGECOIN FROM users WHERE username = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -50,6 +58,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Set parameters
             $param_username = $username;
             $param_wallet = $wallet;
+			$param_USD = $USD;
+			$param_bitcoin = $bitcoin;
+			$param_ethereum = $ethereum;
+			$param_binance = $binanace;
+			$param_cardano = $cardano;
+			$param_tether = $tether;
+			$param_xrp = $xrp;
+			$param_dogecoin= $dogecoin;
+			
 			
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -59,7 +76,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $wallet);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $wallet,$USD,$bitcoin,$ethereum,$binance,$cardano,$tether,$xrp,$doge);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
                             // Password is correct, so start a new session
@@ -69,7 +86,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
-							$_SESSION["wallet"] = $wallet;
+							$_SESSION["wallet"]=$wallet;
+							$_SESSION["USD"]=$USD;
+							$_SESSION["BITCOIN"] = $bitcoin;
+							$_SESSION["ETHEREUM"] = $ethereum;
+							$_SESSION["BINANCE"] = $binance;
+							$_SESSION["CARDANO"] = $cardano;
+							$_SESSION["TETHER"] = $tether;
+							$_SESSION["XRP"] = $xrp;
+							$_SESSION["DOGECOIN"] = $doge;
+							$_SESSION["SELECTED"] =0;
+						
                             
                             // Redirect user to welcome page
                             header("location: welcome.php");

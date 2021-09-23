@@ -1,11 +1,41 @@
 <?php
 // Initialize the session
 session_start();
- $_SESSION["SELECTED"]=0;
+ 
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
+}
+
+// Include config file
+require_once "config.php";
+
+$buyValue;
+
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $buyValue =$_POST["buyValue"];
+    // Check input errors before updating the database
+       // Prepare an update statement
+        $sql = "UPDATE users SET BITCOIN = ? WHERE id = ?";
+        
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "ss", $param_bitcoin, $param_id);
+            
+            // Set parameters
+            $param_bitcoin = $BITCOIN;
+            $param_id = $_SESSION["id"];
+            
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        }
+
+    
+    // Close connection
+    mysqli_close($link);
 }
 
 
@@ -123,8 +153,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Overview</a>
-    <a href="wallet.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-briefcase fa-fw"></i>  Wallet</a>
+    <a href="welcome.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-users fa-fw"></i>  Overview</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-briefcase fa-fw"></i>  Wallet</a>
     <a href="news.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
     <a href="reset-password.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Reset Password</a>
 	<a href="logout.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  Logout</a><br>
@@ -138,104 +168,51 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
 
+
 <!-- popup menu -->
 <div class="form-popup" id="myForm">
-  <form action="" class="form-container" method ="post">
+  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="form-container" method ="post">
      <h2 id="demo"></h2>
 
-    <label for="buyValue"><b>ENTER USD VALUE </b></label>
+    <label for="buyValue"><b>ENTER USD VALUE TO SELL</b></label>
     <input type="int" placeholder="USD VALUE" name="buyValue" required>
 
-	<label for="creditCard"><b>CREDIT CARD NUMBER</b></label>
-    <input type="text" placeholder="Enter Number" name="creditcard" required>
-	
-	<label for="CVV"><b>CVV</b></label>
-    <input type="text" placeholder="Enter Number" name="ccv" required>
 
-
-    <button type="submit" class="btn" >Buy</button>
+    <button type="submit" class="btn" >Sell</button>
 	
 	
     <button type="button" class="btn cancel" onclick="closeForm(); off()">Close</button>
   </form>
 </div>
 
-
-
-
-
-
-
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> Statistics</b></h5>
+    <h1><b><i class="fa fa-briefcase"></i> My Wallet</b></h1>
   </header>
 
-  <div class="w3-row-padding w3-margin-bottom">
-    <div class="w3-quarter">
-      <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>52</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Messages</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-blue w3-padding-16">
-        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>99</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Views</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>23</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Shares</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>50</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Users</h4>
-      </div>
-    </div>
-  </div>
+
 
   <div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
       
       <div class="w3-twothird">
 	  
-        <h5>Crypto Currency Values</h5>
+        <h5>Currently inside wallet:</h5>
 		<! --- try to insert the images of each of the bitcoins --->
 		<! --- insert data here instead of those things, add another column  --->
 		<! --- the columns will be name, average rate, volume(24) --->
 				
 	
-		
-		
+	
         <table class="w3-table w3-striped w3-white w3-hoverable">
           <tr>
             
 			<td><img src="/w3images/1200px-BTC_Logo.png" class="w3-circle w3-margin-right" style="width:46px"></td>
 			
             <td>Bitcoin (BTC)</td>
-            <td>$43,705.71</td>
+            <td>$<?php echo ($_SESSION["BITCOIN"]); ?></td>
 			
-			<td onclick="openForm(); on();bitCoinFunc()" class= "w3-button w3-blue w3-hover-red"  ><i class="fa fa-exchange"></i>  Buy</td>
+			<td onclick="openForm(); on();bitCoinFunc()" class= "w3-button w3-blue w3-hover-green"  ><i class="fa fa-external-link-square"></i>  Sell</td>
 			
 			
           </tr>
@@ -244,8 +221,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 			<td><img src="/w3images/1257px-Ethereum_logo_2014.png" class="w3-circle w3-margin-right" style="width:46px"></td>
 			
             <td>Ethereum (ETH)</td>
-            <td>$3,079.11</td>
-			<td onclick="openForm();on();ethFunc()" class=" w3-button  w3-light-blue w3-hover-red"><i class="fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["ETHEREUM"]); ?></td>
+			<td onclick="openForm();on();ethFunc()" class=" w3-button  w3-light-blue w3-hover-green"><i class="fa fa-external-link-square"></i>  Sell</td>
 			
           </tr>
           <tr>
@@ -253,94 +230,40 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
             <td><img src="/w3images/binance-coin-bnb-logo.png" class="w3-circle w3-margin-right" style="width:46px"></td>
 			
             <td>Binance Coin (BNB)</td>
-            <td>$377.41</td>
-			<td onclick="openForm();on();binFunc()" class=" w3-button  w3-blue w3-hover-red"><i class="fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["BINANCE"]); ?></td>
+			<td onclick="openForm();on();binFunc()" class=" w3-button  w3-blue w3-hover-green"><i class="fa fa-external-link-square"></i>  Sell</td>
 			
           </tr>
           <tr>
             <td><img src="/w3images/cardano-ada-logo.png" class="w3-circle w3-margin-right" style="width:46px"></td>
             <td>Cardano (ADA)</td>
-            <td>$2.45</td>
-			<td onclick="openForm();on();cardFunc()" class="w3-button  w3-light-blue w3-hover-red"><i class="	fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["CARDANO"]); ?></td>
+			<td onclick="openForm();on();cardFunc()" class="w3-button  w3-light-blue w3-hover-green"><i class="	fa fa-external-link-square"></i>  Sell</td>
 			
           </tr>
           <tr>
             <td><img src="/w3images/825.png" class="w3-circle w3-margin-right" style="width:46px"></td>
             <td>Tether (USDT)</td>
-            <td>$1.00</td>
-			<td onclick="openForm();on();tethFunc()" class=" w3-button  w3-blue w3-hover-red"><i class="	fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["TETHER"]); ?></td>
+			<td onclick="openForm();on();tethFunc()" class=" w3-button  w3-blue w3-hover-green"><i class="	fa fa-external-link-square"></i>  Sell</td>
           </tr>
           <tr>
            <td><img src="/w3images/52.png" class="w3-circle w3-margin-right" style="width:46px"></td>
             <td>XRP(XRP)</td>
-            <td>$1.00</td>
-			<td  onclick="openForm();on();xrpFunc()"class="w3-button  w3-light-blue w3-hover-red"><i class="	fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["XRP"]); ?></td>
+			<td  onclick="openForm();on();xrpFunc()"class="w3-button  w3-light-blue w3-hover-green"><i class="	fa fa-external-link-square"></i>  Sell</td>
           </tr>
           <tr>
             <td><img src="/w3images/Dogecoin_Logo.png" class="w3-circle w3-margin-right" style="width:46px"></td>
             <td>Dogecoin(DOGE)</td>
-            <td>$0.2247</td>
-			<td onclick="openForm();on();dogeFunc()"class=" w3-button  w3-blue w3-hover-red"><i class="	fa fa-exchange"></i>  Buy</td>
+            <td>$<?php echo ($_SESSION["DOGECOIN"]); ?></td>
+			<td onclick="openForm();on();dogeFunc()"class=" w3-button  w3-blue w3-hover-green"><i class="	fa fa-external-link-square"></i>  Sell</td>
           </tr>
         </table>
       </div>
     </div>
   </div>
   <hr>
-  <div class="w3-container">
-    <h5>Top Countries using Crypto</h5>
-    <p>Nigeria</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-green" style="width:32%">32%</div>
-    </div>
-
-    <p>Vietnam</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-orange" style="width:21%">21%</div>
-    </div>
-
-    <p>Philippines</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-red" style="width:20%">20%</div>
-	  </div>
-	   <p>Turkey</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-white" style="width:16%">16%</div>
-	  </div>
-	  <p>Peru</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-center w3-padding w3-yellow" style="width:16%">16%</div>
-	  </div>
-    </div>
-  </div>
-  <hr>
-
-  
-
-  <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
-    <div class="w3-row">
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-        <p>Language</p>
-        <p>Country</p>
-        <p>City</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-red">System</h5>
-        <p>Browser</p>
-        <p>OS</p>
-        <p>More</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-        <p>Users</p>
-        <p>Active</p>
-        <p>Geo</p>
-        <p>Interests</p>
-      </div>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
@@ -393,31 +316,28 @@ function off() {
 }
 
 function bitCoinFunc() {
-  document.getElementById("demo").innerHTML = "BUY BitCoin";
-
+  document.getElementById("demo").innerHTML = "SELL BitCoin";
 }
 
 function ethFunc() {
-  document.getElementById("demo").innerHTML = "BUY Ethereum";
- 
+  document.getElementById("demo").innerHTML = "SELL Ethereum";
 }
 
 function binFunc() {
-  document.getElementById("demo").innerHTML = "BUY Binance";
+  document.getElementById("demo").innerHTML = "SELL Binance";
 }
 function cardFunc() {
-  document.getElementById("demo").innerHTML = "BUY Cardano";
+  document.getElementById("demo").innerHTML = "SELL Cardano";
 }
 function tethFunc() {
-  document.getElementById("demo").innerHTML = "BUY Tether";
+  document.getElementById("demo").innerHTML = "SELL Tether";
 }
 function xrpFunc() {
-  document.getElementById("demo").innerHTML = "BUY XRP";
+  document.getElementById("demo").innerHTML = "SELL XRP";
 }
 function dogeFunc() {
-  document.getElementById("demo").innerHTML = "BUY DogeCoin";
+  document.getElementById("demo").innerHTML = "SELL DogeCoin";
 }
-
 
 
 </script>
